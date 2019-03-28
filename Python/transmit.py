@@ -21,10 +21,7 @@ print("Connection established")
 
 data = subprocess.check_output(["xxd", "-p", args.filename]).decode().strip()
 data = re.findall(".{1,6}", data)
-
-print(data)
-
-exit(0)
+data[-1] = data[-1].ljust(6, '0')
 
 sleep(2)
 for d in range(len(data)):
@@ -34,3 +31,6 @@ for d in range(len(data)):
     print(f"{math.ceil(d/len(data)*100)}%", ":: sending", data[d])
     ser.write(data[d].encode())
     sleep(0.1)
+
+    if d == len(data) - 1:
+        ser.write(b"deadff")
