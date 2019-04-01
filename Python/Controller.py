@@ -64,7 +64,7 @@ def do_slew(angle, spin_u):
 
     cur_time = last_time = init_time = 0
     last_rww = rw_scw = np.array([0,0,0,0])
-    last_satw = satw_IMU = satw = np.array([0,0,0])
+    desired_w = last_satw = satw_IMU = satw = np.array([0,0,0])
     overshoot = False
 
     # TODO
@@ -77,9 +77,9 @@ def do_slew(angle, spin_u):
     while ((cur_time - init_time) < 2 * kp * angle):
         iteration = desired_wmag = 0
 
-        desired_w = [0.5 * wmax_sat[i] *\
-                (1 + sin(2 * pi * cur_time / (2 * kp * angle) - pi / 2))\
-                for i in range(3)]
+        for i in range(3):
+            desired_w[i] = 0.5 * wmax_sat[i] *\
+                           (1 + sin(2 * pi * cur_time / (2 * kp * angle) - pi / 2))
 
         desired_wmag += desired_wmag ** 2
         desired_wmag = sqrt(desired_wmag)
@@ -120,6 +120,8 @@ def do_slew(angle, spin_u):
     overshoot = False
     angle_err = 0
 
+    sleep(1)
+
 def bp(x):
     print(x)
     exit(1)
@@ -129,7 +131,7 @@ if __name__ == "__main__":
 
     # TODO
     light_p = [1,1,1]
-    sat_p = [10,10,10]
+    sat_p = [2,2,2]
     rotation = [1,1,1]
 
     while cur_oerr_mag > 0.01745:
