@@ -17,7 +17,7 @@ def calc_rw_angvec(av_target):
     rw4 = izz * (-0.5 * x * av_target[0] + 0.5774 * y * av_target[1])
 
     rw_angvec = np.array([rw1, rw2, rw3, rw4])
-    print(f"-> {rw_angvec}\n")
+    print("->, rw_angvec, "\n")
     return rw_angvec
 
 def intert_to_body(a, r):
@@ -36,7 +36,7 @@ def intert_to_body(a, r):
             (cos(r[0]) * sin(r[1]) * sin(r[2]) - sin(r[0]) * cos(r[2])) * a[1] +\
             cos(r[0]) * cos(r[1]) * a[2]
             ])
-    print(f"-> {itb}\n")
+    print("->", itb, "\n")
     return itb
 
 def get_sat_Oinertial(rotation):
@@ -45,7 +45,7 @@ def get_sat_Oinertial(rotation):
     Oinertial = np.array([cos(rotation[1]) * cos(rotation[2]),
                          cos(rotation[1]) * sin(rotation[2]),
                          -sin(rotation[1])])
-    print(f"-> {Oinertial}\n")
+    print("->, Oinertial, "\n")
     return Oinertial
 
 def vector_angle(a, b):
@@ -56,8 +56,33 @@ def vector_angle(a, b):
     dot = a @ b
 
     vec_ang = dot / mag_a / mag_b;
-    print(f"-> {vec_ang}\n")
+    print("->", vec_ang,"\n")
     return vec_ang
+
+def slew(horizontal=False):
+    cur_time = list_time = init_time = total_time = 0
+    satw_error = satw_IMU = desired_w = []
+    q = [1,1,1]
+
+    while ((cur_time - init_time) < total_time):
+        for i in range(3):
+            if iteration is 0:
+	        init_time = cur_time
+	        iteration += 1
+
+        for i in range(3):
+	    satw_err[i] = izz * q[i] * (cur_time - init_time) - satw_IMU[i]
+	    if horitzontal:
+	        if i is 1 or i is 0:
+	            desired_w[i] = satw_IMU[i]
+	    else:
+	        if i is 1 or i is 2
+		    desired_w[i] = satw_IMU[i]
+
+	total_time += satw_err[0] * (cur_time - last_time)
+	rww = calc_rw_angvec_vert(desired_w)
+	# send rww to speed controllers
+	last_time = cur_time
 
 def do_slew(angle, spin_u):
     print("do_slew ::", angle, spin_u)
@@ -115,12 +140,8 @@ def do_slew(angle, spin_u):
         last_rww = rw_w
         last_satw = satw
 
-        sleep(1)
-
     overshoot = False
     angle_err = 0
-
-    sleep(1)
 
 def bp(x):
     print(x)
