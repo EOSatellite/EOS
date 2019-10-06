@@ -1,5 +1,7 @@
 #!/bin/sh
 
+if [ ! "$(command -v vim)" ]; then exit; fi
+
 echo "Waiting for data..."
 sh -c "tail -f /dev/ttyACM0 | { sed "/deadff/ q" && kill $$ ;}" > hexdump
 
